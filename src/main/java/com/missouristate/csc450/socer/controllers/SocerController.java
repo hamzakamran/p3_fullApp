@@ -46,7 +46,7 @@ public class SocerController {
         Validater validater = new Validater(fileName);
         if (!validater.isValidFunction())
         {
-            return "redirect:/home";
+            return "{}";
         }
         FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(fileName);
 
@@ -54,4 +54,18 @@ public class SocerController {
 
 
     }
+
+
+    @PostMapping(value = "/searchFunctions", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String searchFunctions(@RequestBody String keywords, Model model) {
+
+        // add logic here to do something with the keywords that were in the search bar
+        System.out.println(keywords);
+        return "redirect:/home";
+
+
+    }
+
 }
+
+

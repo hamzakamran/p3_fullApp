@@ -16,26 +16,13 @@ public class Validater {
 
 	public Validater (String fileName) {
 		try {
-			
-			boolean allowedFile = false;
 
-
-			if (fileName.charAt(fileName.length() - 1) == 'c' && fileName.charAt(fileName.length() - 2) == '.')
-				;
-			allowedFile = true;
-			if (fileName.charAt(fileName.length() - 1) == 'h' && fileName.charAt(fileName.length() - 2) == '.')
-				;
-			allowedFile = true;
-			if (fileName.charAt(fileName.length() - 3) == 'c' && fileName.charAt(fileName.length() - 4) == '.'
-					&& fileName.charAt(fileName.length() - 2) == 'p' && fileName.charAt(fileName.length() - 1) == 'p')
-				;
-			allowedFile = true;
 			File file = new File(fileName);
 			Scanner sc = new Scanner(file); // file to be scanned
 			formatCode(sc);
 			sc = new Scanner(file);
 			isValidFunction = isFunctionValid(sc);
-			System.out.println("Is the file's extension valid? " + (allowedFile ? "Yes" : "No"));
+
 			System.out.println("Is the file's functions valid? " + (isValidFunction ? "Yes" : "No"));
 
 		} catch (Exception e) {

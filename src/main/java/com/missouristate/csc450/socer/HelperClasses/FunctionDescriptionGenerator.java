@@ -10,7 +10,7 @@ public class FunctionDescriptionGenerator {
     public FunctionDescriptionGenerator(String fileName){
         // create a list of documents
         ArrayList<Document> documents = new ArrayList<Document>();
-        String fileNames[] = new String[]{
+        String fileNames[] = new String[] {
             fileName
                 // add all the files from database here
         };

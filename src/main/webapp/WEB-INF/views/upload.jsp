@@ -117,7 +117,8 @@
                     if (httpresponseservlet.ok) {
                         return httpresponseservlet.json();
                     } else {
-                        alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
+                        //alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
+                        displayCard("error", "Error: Syntax errors detected");
                     }
                 }).catch(error => {
                     //alert("NO!!!!!!! Error = " + error);

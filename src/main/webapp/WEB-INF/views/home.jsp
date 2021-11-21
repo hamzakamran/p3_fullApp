@@ -104,12 +104,45 @@ void displayNum(int n1, float n2) {
         function search(e) {
             if (event.key === 'Enter') {
                 if (e.value.length > 0) {
+                    searchFunctions(e.value);
                     document.getElementById("resultContainer").classList.remove("hidden");
                 } else {
                     displayCard("error", "Error: input cannot be blank");
                 }
             }
         }
+
+        function searchFunctions(keywords) {
+            let data = {};
+
+
+                let contextPath = "${pageContext.request.contextPath}";
+                let url = contextPath+ "/searchFunctions";
+                console.log(url);
+
+                fetch(url, {
+                                method: "POST",
+                                body: JSON.stringify(keywords),
+                                headers:{
+                                    "Content-Type": "application/json"
+                                }
+                            })
+                .then(httpresponseservlet => {
+                    if (httpresponseservlet.ok) {
+                        return httpresponseservlet.json();
+                    } else {
+                        //alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
+
+                    }
+                }).catch(error => {
+                    //alert("NO!!!!!!! Error = " + error);
+
+                }).finally(() => {
+
+                });
+        }
+
+
     </script>
 </body>
 
