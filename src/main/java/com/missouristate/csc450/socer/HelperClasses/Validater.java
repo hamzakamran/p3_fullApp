@@ -14,7 +14,6 @@ public class Validater {
 	static boolean possibleOverride = false;
 	private boolean isValidFunction;
 
-
 	public Validater (String fileName) {
 		try {
 			
