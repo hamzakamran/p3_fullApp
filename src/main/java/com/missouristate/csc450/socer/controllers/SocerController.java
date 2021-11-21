@@ -1,10 +1,18 @@
 package com.missouristate.csc450.socer.controllers;
 
+import com.missouristate.csc450.socer.DTO.FileNameAndContents;
+import com.missouristate.csc450.socer.HelperClasses.CreateFile;
+import com.missouristate.csc450.socer.HelperClasses.FunctionDescriptionGenerator;
+import com.missouristate.csc450.socer.HelperClasses.Validater;
+import com.missouristate.csc450.socer.HelperClasses.WriteToFile;
 import com.missouristate.csc450.socer.service.SocerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
 
 @Controller
 public class SocerController {
@@ -20,5 +28,30 @@ public class SocerController {
     @GetMapping({"/upload"})
     public String upload(Model model){
         return "upload";
+    }
+
+    @PostMapping(value = "/addFunction", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addFunction(@RequestBody FileNameAndContents data, Model model) {
+
+        //socerService.addFunction();
+
+        String fileName;
+        String[] fileContents;
+        fileName = data.getFileName();
+        fileContents = data.getFileContents();
+
+        CreateFile createFile = new CreateFile(fileName);
+        WriteToFile writeToFile = new WriteToFile(fileName, fileContents);
+
+        Validater validater = new Validater(fileName);
+        if (!validater.isValidFunction())
+        {
+            return "redirect:/home";
+        }
+        FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(fileName);
+
+        return "redirect:/home";
+
+
     }
 }

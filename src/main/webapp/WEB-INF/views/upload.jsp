@@ -75,14 +75,59 @@
                 let fileReader = new FileReader();
                 fileReader.onload = () => {
                     let fileURL = fileReader.result; //passing user file source in fileURL variable
+                    //console.log(fileURL);
+                    // console.log(fileReader.readAsText(file));
+
+                    var lines = fileURL.split('\r\n');
+                    for(var line = 0; line < lines.length; line++){
+                        console.log(lines[line]);
+                    }
+
+                    attemptToAddFunction(lines,  file.name);
                     displayCard("success", "File successfully uploaded");
                 }
-                fileReader.readAsDataURL(file);
+                fileReader.readAsText(file);
             } else {
                 displayCard("error", "Error: .cpp files only");
                 dropArea.classList.remove("active");
                 dragText.textContent = "Drag & Drop to Upload File";
             }
+        }
+
+        function attemptToAddFunction(fileContent, fileName)
+        {
+            let data = {};
+            data.fileContents = Array.from(fileContent);
+            data.fileName = fileName;
+
+            console.log(fileContent);
+
+            	let contextPath = "${pageContext.request.contextPath}";
+            	let url = contextPath+ "/addFunction";
+            	console.log(url);
+
+            	fetch(url, {
+                           		method: "POST",
+                           		body: JSON.stringify(data),
+                           		headers:{
+                           			"Content-Type": "application/json"
+                           		}
+                           	})
+            	.then(httpresponseservlet => {
+                    if (httpresponseservlet.ok) {
+                        return httpresponseservlet.json();
+                    } else {
+                        alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
+                    }
+                }).catch(error => {
+                    //alert("NO!!!!!!! Error = " + error);
+
+                }).finally(() => {
+
+                });
+
+
+
         }
     </script>
 </body>
