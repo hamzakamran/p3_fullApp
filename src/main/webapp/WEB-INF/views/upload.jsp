@@ -79,12 +79,9 @@
                     // console.log(fileReader.readAsText(file));
 
                     var lines = fileURL.split('\r\n');
-                    for(var line = 0; line < lines.length; line++){
-                        console.log(lines[line]);
-                    }
 
                     attemptToAddFunction(lines,  file.name);
-                    displayCard("success", "File successfully uploaded");
+
                 }
                 fileReader.readAsText(file);
             } else {
@@ -94,8 +91,7 @@
             }
         }
 
-        function attemptToAddFunction(fileContent, fileName)
-        {
+        function attemptToAddFunction(fileContent, fileName) {
             let data = {};
             data.fileContents = Array.from(fileContent);
             data.fileName = fileName;
@@ -104,7 +100,6 @@
 
             	let contextPath = "${pageContext.request.contextPath}";
             	let url = contextPath+ "/addFunction";
-            	console.log(url);
 
             	fetch(url, {
                            		method: "POST",
@@ -115,20 +110,18 @@
                            	})
             	.then(httpresponseservlet => {
                     if (httpresponseservlet.ok) {
+                        displayCard("success", "File successfully uploaded");
                         return httpresponseservlet.json();
                     } else {
                         //alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
-                        displayCard("error", "Error: Syntax errors detected");
+                        displayCard("error", "File Contains Errors");
+
                     }
                 }).catch(error => {
                     //alert("NO!!!!!!! Error = " + error);
-
                 }).finally(() => {
 
                 });
-
-
-
         }
     </script>
 </body>

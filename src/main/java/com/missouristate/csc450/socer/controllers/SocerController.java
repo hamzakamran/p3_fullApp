@@ -20,41 +20,34 @@ public class SocerController {
     @Autowired
     private SocerService socerService;
 
+
     @GetMapping({"/", "/home"})
     public String socer(Model model){
         return "home";
     }
+
 
     @GetMapping({"/upload"})
     public String upload(Model model){
         return "upload";
     }
 
+
     @PostMapping(value = "/addFunction", produces = MediaType.APPLICATION_JSON_VALUE)
     public String addFunction(@RequestBody FileNameAndContents data, Model model) {
-
-        //socerService.addFunction();
 
         String fileName;
         String[] fileContents;
         fileName = data.getFileName();
         fileContents = data.getFileContents();
 
-        CreateFile createFile = new CreateFile(fileName);
-        WriteToFile writeToFile = new WriteToFile(fileName, fileContents);
-
-        Validater validater = new Validater(fileName);
-        if (!validater.isValidFunction())
+        boolean willFunctionBeAdded = socerService.addFunction(fileName, fileContents);
+        if (!willFunctionBeAdded)
         {
             return "{}";
         }
-        FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(fileName);
-
         return "redirect:/home";
-
-
     }
-
 
     @PostMapping(value = "/searchFunctions", produces = MediaType.APPLICATION_JSON_VALUE)
     public String searchFunctions(@RequestBody String keywords, Model model) {
@@ -62,8 +55,6 @@ public class SocerController {
         // add logic here to do something with the keywords that were in the search bar
         System.out.println(keywords);
         return "redirect:/home";
-
-
     }
 
 }

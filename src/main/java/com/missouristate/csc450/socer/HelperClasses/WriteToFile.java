@@ -8,6 +8,7 @@ public class WriteToFile {
     try {
       FileWriter myWriter = new FileWriter(fileName);
     for (String string: fileContent) {
+      myWriter.write(System.getProperty( "line.separator" ));
       myWriter.write(string);
     }
 
