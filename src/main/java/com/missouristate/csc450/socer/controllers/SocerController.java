@@ -37,7 +37,7 @@ public class SocerController {
     public String addFunction(@RequestBody FileNameAndContents data, Model model) {
 
         String fileName;
-        String[] fileContents;
+        String fileContents;
         fileName = data.getFileName();
         fileContents = data.getFileContents();
 

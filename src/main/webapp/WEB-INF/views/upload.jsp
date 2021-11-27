@@ -78,9 +78,7 @@
                     //console.log(fileURL);
                     // console.log(fileReader.readAsText(file));
 
-                    var lines = fileURL.split('\r\n');
-
-                    attemptToAddFunction(lines,  file.name);
+                    attemptToAddFunction(fileURL,  file.name);
 
                 }
                 fileReader.readAsText(file);
@@ -93,7 +91,7 @@
 
         function attemptToAddFunction(fileContent, fileName) {
             let data = {};
-            data.fileContents = Array.from(fileContent);
+            data.fileContents = fileContent;
             data.fileName = fileName;
 
             console.log(fileContent);

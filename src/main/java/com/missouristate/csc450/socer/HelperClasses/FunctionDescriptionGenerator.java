@@ -1,17 +1,24 @@
 package com.missouristate.csc450.socer.HelperClasses;
 
+import com.missouristate.csc450.socer.DAO.FinalProjectRepository;
+import com.missouristate.csc450.socer.TableEntryObjects.Function;
+import com.missouristate.csc450.socer.TableEntryObjects.Keyword;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.lang.Math;
 
+
+
 public class FunctionDescriptionGenerator {
-    public FunctionDescriptionGenerator(String fileName){
+    public FunctionDescriptionGenerator(String fileName, String functionBody, FinalProjectRepository finalProjectRepository){
         // create a list of documents
         ArrayList<Document> documents = new ArrayList<Document>();
         String fileNames[] = new String[] {
-                "C://Users//adamj//Documents//Computer Science//C-Plus-Plus-master//data_structures/avltree.cpp",
+
             fileName
                 // add all the files from database here
         };
@@ -21,11 +28,20 @@ public class FunctionDescriptionGenerator {
         for(Document doc : documents) doc.calculateTfidf(documents);
 
         // generate result
-        for(Document doc : documents) System.out.println(doc.generateRelevantKeywords());
+        for(Document doc : documents) {
+            Function function = new Function();
+            function.setFunctionContents(functionBody);
+            function.setFileName(fileName);
+
+            System.out.println(doc.generateRelevantKeywords(function, finalProjectRepository));
+        }
     }
 }
 
 class Document {
+
+
+
     String title;
     ArrayList<String> words = new ArrayList<String>();
     ArrayList<Term> terms = new ArrayList<Term>();
@@ -33,7 +49,7 @@ class Document {
         this.title = t;
         String removeable[] = new String[]{
             ";", "{", "}", "<", ">", "==", "=", "+", "-", "*", "/", "+=", "-=", "++", "--", 
-            "    ", ",", "@", "/**", "*", "**/", "]", "//"
+            "    ", ",", "@", "/**", "*", "**/", "]", "//", "%"
         };
         String replaceWithSpace[] = new String[]{
             "(", ")", "["
@@ -90,12 +106,23 @@ class Document {
         }
     }
     
-    public HashMap<Term, Document> generateRelevantKeywords(){
+    public HashMap<Term, Document> generateRelevantKeywords(Function function, FinalProjectRepository finalProjectRepository){
         HashMap<Term, Document> result = new HashMap<Term, Document>();
+        List<Keyword> keywordList = new ArrayList<>();
         System.out.println("-----" + title + "-----");
         for(Term term : terms){
-            System.out.println(term.term + ": " + term.tfidf);
+            //System.out.println(term.term + ": " + term.tfidf);
+            Keyword keyword = new Keyword();
+            keyword.setFunction(function);
+            keyword.setFileName(title);
+            keyword.setScore(""+(term.tfidf));
+            keyword.setKeyword(term.term);
+            keywordList.add(keyword);
+
         }
+        function.setKeywordList(keywordList);
+        finalProjectRepository.save(function);
+
         return result;
     }
 }

@@ -1,20 +1,29 @@
 package com.missouristate.csc450.socer.service.impl;
 
+import com.missouristate.csc450.socer.DAO.FinalProjectRepository;
 import com.missouristate.csc450.socer.HelperClasses.CreateFile;
 import com.missouristate.csc450.socer.HelperClasses.FunctionDescriptionGenerator;
 import com.missouristate.csc450.socer.HelperClasses.Validater;
 import com.missouristate.csc450.socer.HelperClasses.WriteToFile;
 import com.missouristate.csc450.socer.service.SocerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SocerServiceImpl implements SocerService {
 
+    @Autowired
+    FinalProjectRepository finalProjectRepository;
+
+
     @Override
-    public boolean addFunction(String fileName, String[] fileContents) {
+    public boolean addFunction(String fileName, String fileContents) {
+
+        String[] fileContentsFormatted;
+        fileContentsFormatted = fileContents.split("/r/n");
 
         CreateFile createFile = new CreateFile(fileName);
-        WriteToFile writeToFile = new WriteToFile(fileName, fileContents);
+        WriteToFile writeToFile = new WriteToFile(fileName, fileContentsFormatted);
 
         // call the validator
         Validater validater = new Validater(fileName);
@@ -24,9 +33,10 @@ public class SocerServiceImpl implements SocerService {
         if (isFunctionValid == true)
         {
             // call function description generator
-            FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(fileName);
+            FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(fileName, fileContents, finalProjectRepository);
 
             // add to database
+
         }
         else {
             return false;
