@@ -50,27 +50,12 @@ void displayNum(int n1, float n2) {
         <p>Error: something went wrong</p>
     </div>
     <script>
+        var fileArray = [];
         document.addEventListener("DOMContentLoaded", () => {
             // populate results
-            let docs = [];
-            for (let i = 0; i < 10; i++) {
-                docs.push(new Doc(
-                    "Test Function #" + (i + 1),
-                    "This is a test function",
-                    1
-                ));
-            }
-            let ul = document.getElementById("results");
-            for (let doc of docs) {
-                let li = document.createElement("li");
-                let h3 = document.createElement("h3");
-                let p = document.createElement("p");
-                h3.appendChild(document.createTextNode(doc.title));
-                p.appendChild(document.createTextNode(doc.description));
-                li.appendChild(h3);
-                li.appendChild(p);
-                ul.appendChild(li);
-            }
+
+            populateData();
+
 
             // search bar
             const clearIcon = document.querySelector(".clear-icon");
@@ -98,12 +83,52 @@ void displayNum(int n1, float n2) {
                     "}";
                 download("test.cpp", res);
             });
+
+             // download button event listener
+            document.querySelector(".leftContainer").addEventListener("click", (e) => {
+                console.log(e.target.innerHTML);
+                let functionName = e.target.innerHTML;
+                functionName.replace("<h3>", "");
+                functionName.replace("</h3>", "");
+                console.log(functionName);
+                for(let i = 0; i<fileArray.length;i++)
+                {
+                    if (functionName == fileArray.at(i).fileName)
+                    {
+                        document.querySelector(".rightContainer").innerHTML = fileArray.at(i).functionContents;
+                        break;
+                    }
+                }
+            });
         });
+
+        function populateData() {
+            let docs = [];
+
+                        for (let i = 0; i < fileArray.length; i++) {
+                            console.log(fileArray.at(i).fileName);
+                            docs.push(new Doc(
+                                fileArray.at(i).fileName
+                            ));
+                        }
+                        let ul = document.getElementById("results");
+                        ul.innerHTML = "";
+                        for (let doc of docs) {
+                            let li = document.createElement("li");
+                            let h3 = document.createElement("h3");
+
+                            h3.appendChild(document.createTextNode(doc.title));
+                            li.appendChild(h3);
+
+                            ul.appendChild(li);
+                        }
+        }
 
         // search bar event listener
         function search(e) {
             if (event.key === 'Enter') {
                 if (e.value.length > 0) {
+                    fileArray = [];
                     searchFunctions(e.value);
                     document.getElementById("resultContainer").classList.remove("hidden");
                 } else {
@@ -111,6 +136,8 @@ void displayNum(int n1, float n2) {
                 }
             }
         }
+
+
 
         function searchFunctions(keywords) {
             let data = {};
@@ -134,6 +161,11 @@ void displayNum(int n1, float n2) {
                         //alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
 
                     }
+                }).then(answer => {
+                   console.log(answer);
+                   fileArray = answer;
+                   populateData();
+
                 }).catch(error => {
                     //alert("NO!!!!!!! Error = " + error);
 

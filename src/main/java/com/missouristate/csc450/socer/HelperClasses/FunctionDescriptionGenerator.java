@@ -40,8 +40,6 @@ public class FunctionDescriptionGenerator {
 
 class Document {
 
-
-
     String title;
     ArrayList<String> words = new ArrayList<String>();
     ArrayList<Term> terms = new ArrayList<Term>();

@@ -5,6 +5,7 @@ import com.missouristate.csc450.socer.HelperClasses.CreateFile;
 import com.missouristate.csc450.socer.HelperClasses.FunctionDescriptionGenerator;
 import com.missouristate.csc450.socer.HelperClasses.Validater;
 import com.missouristate.csc450.socer.HelperClasses.WriteToFile;
+import com.missouristate.csc450.socer.TableEntryObjects.Function;
 import com.missouristate.csc450.socer.service.SocerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.util.List;
 
 @Controller
 public class SocerController {
@@ -49,12 +51,16 @@ public class SocerController {
         return "redirect:/home";
     }
 
+    @ResponseBody
     @PostMapping(value = "/searchFunctions", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String searchFunctions(@RequestBody String keywords, Model model) {
+    public Object searchFunctions(@RequestBody String keywords, Model model) {
 
         // add logic here to do something with the keywords that were in the search bar
         System.out.println(keywords);
-        return "redirect:/home";
+        List<Function> functionList = socerService.getFunctions();
+
+        return functionList;
+        //return "redirect:/home";
     }
 
 }

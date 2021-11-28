@@ -5,9 +5,12 @@ import com.missouristate.csc450.socer.HelperClasses.CreateFile;
 import com.missouristate.csc450.socer.HelperClasses.FunctionDescriptionGenerator;
 import com.missouristate.csc450.socer.HelperClasses.Validater;
 import com.missouristate.csc450.socer.HelperClasses.WriteToFile;
+import com.missouristate.csc450.socer.TableEntryObjects.Function;
 import com.missouristate.csc450.socer.service.SocerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SocerServiceImpl implements SocerService {
@@ -35,8 +38,6 @@ public class SocerServiceImpl implements SocerService {
             // call function description generator
             FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(fileName, fileContents, finalProjectRepository);
 
-            // add to database
-
         }
         else {
             return false;
@@ -44,4 +45,10 @@ public class SocerServiceImpl implements SocerService {
 
         return true;
     }
+
+    @Override
+    public List<Function> getFunctions(){
+        return finalProjectRepository.getFunctions();
+    }
+
 }
