@@ -26,17 +26,15 @@ public class Keyword implements Serializable {
     private Function function;
 
 
-    @Column(name = "keyword", columnDefinition = "VARCHAR(32)")
+    @Column(name = "keyword", columnDefinition = "VARCHAR(128)")
     private String keyword;
 
 
-    @Column(name = "score", columnDefinition = "INTEGER")
+    @Column(name = "score", columnDefinition = "VARCHAR(128)")
     private String score;
 
     @Column(name = "file_name", columnDefinition = "VARCHAR(64)")
     private String fileName;
-
-
 
     public int getPropertyId() {
         return propertyId;

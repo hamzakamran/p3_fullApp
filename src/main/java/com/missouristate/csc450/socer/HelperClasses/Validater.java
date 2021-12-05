@@ -5,14 +5,15 @@ import java.util.Scanner;
 //
 
 public class Validater {
-	static String[] functionComments = new String[50];
-	static String[] theFormattedCode = new String[5000];
-	static int functionIteration = 0;
-	static boolean isInEnum = false;
-	static int iSemicolonsNeeded = 0;
-	static boolean bHasFunctionStarted = false;
-	static boolean possibleOverride = false;
+	private String[] functionComments = new String[50];
+	private String[] theFormattedCode = new String[5000];
+	private int functionIteration = 0;
+	private boolean isInEnum = false;
+	private int iSemicolonsNeeded = 0;
+	private boolean bHasFunctionStarted = false;
+	private boolean possibleOverride = false;
 	private boolean isValidFunction;
+	private String errorMessage= "";
 
 	public Validater (String fileName) {
 		try {
@@ -23,15 +24,15 @@ public class Validater {
 			sc = new Scanner(file);
 			isValidFunction = isFunctionValid(sc);
 
-			System.out.println("Is the file's functions valid? " + (isValidFunction ? "Yes" : "No"));
-
+			//System.out.println("Is the file's functions valid? " + (isValidFunction ? "Yes" : "No"));
+			sc.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public static void formatCode(Scanner bigCode) {
+	public void formatCode(Scanner bigCode) {
 
 		String sLineText = "";
 		int index = 0;
@@ -180,13 +181,13 @@ public class Validater {
 		for (int j = 0; j < theFormattedCode.length; j++) {
 			if (theFormattedCode[j] != null) {
 				iSemicolonsNeeded += (semicolonsNeededForKeyword(theFormattedCode[j]));
-				// System.out.println(theFormattedCode[j]);
+				//System.out.println(theFormattedCode[j]);
 			}
 		}
 
 	}
 
-	public static boolean isLetter(char x) {
+	public boolean isLetter(char x) {
 		boolean bRetV = false;
 		if (x == 'a' || x == 'b' || x == 'c' || x == 'd' || x == 'e' || x == 'f' || x == 'g' || x == 'h' || x == 'i'
 				|| x == 'j' || x == 'k' || x == 'l' || x == 'm' || x == 'n' || x == 'o' || x == 'p' || x == 'q'
@@ -202,7 +203,7 @@ public class Validater {
 		return bRetV;
 	}
 
-	public static int semicolonsNeededForKeyword(String x) {
+	public int semicolonsNeededForKeyword(String x) {
 		int iRetv = 1;
 		int indexOfFirstLetter = 0;
 
@@ -276,7 +277,7 @@ public class Validater {
 //		System.out.println();
 		return iRetv;
 	}
-	static String firstWord(String x)
+	public String firstWord(String x)
 	{
 		boolean wordStarted = false;
 		String retV = "";
@@ -297,7 +298,7 @@ public class Validater {
 		return retV;
 	}
 
-	public static boolean isFunctionValid(Scanner bigCode) {
+	public boolean isFunctionValid(Scanner bigCode) {
 		int iLineNumber = 0;
 
 		boolean bRetV = true;
@@ -479,12 +480,20 @@ public class Validater {
 
 			}
 		}
-		if ((iNumOpenParenthesis + iNumOpenBraces) != 0) {
+		if ((iNumOpenParenthesis) != 0) {
 			bRetV = false;
+			errorMessage = "We suspect a missing parenthesis";
 			// System.out.println(iNumOpenBraces);
 			// System.out.println(iNumOpenParenthesis);
 		}
-		if (iSemicolonsNeeded != 0) {
+		if (iNumOpenBraces != 0)
+		{
+			bRetV = false;
+			errorMessage = "We suspect a missing curly brace";
+		}
+		if (iSemicolonsNeeded > 0) {
+			//System.out.println(iSemicolonsNeeded);
+			errorMessage = "We suspect a missing semicolon";
 			bRetV = false;
 		}
 		for (int j = 0; j < functionComments.length; j++) {
@@ -496,7 +505,7 @@ public class Validater {
 		return bRetV;
 	}
 
-	static boolean isFunctionDeclaration(String x) {
+	boolean isFunctionDeclaration(String x) {
 		String firstWord = "";
 		String secondWord = "";
 		boolean firstWordSet = false;
@@ -525,14 +534,16 @@ public class Validater {
 			}
 			
 		}
-		if (firstWord.equals("RBtree"))
-			System.out.println(firstWord);
+
 		if (openP && closeP)
 			return true;
 		else
 			return false;
 	}
 
+	public String getErrorMessage(){
+		return errorMessage;
+	}
 	public boolean isValidFunction() {
 		return isValidFunction;
 	}

@@ -14,27 +14,36 @@ import java.lang.Math;
 
 
 public class FunctionDescriptionGenerator {
-    public FunctionDescriptionGenerator(String fileName, String functionBody, FinalProjectRepository finalProjectRepository){
+    public FunctionDescriptionGenerator(ArrayList<String> fileName, ArrayList<String> functionBody, FinalProjectRepository finalProjectRepository){
         // create a list of documents
         ArrayList<Document> documents = new ArrayList<Document>();
-        String fileNames[] = new String[] {
-
-            fileName
-                // add all the files from database here
-        };
+//        String fileNames[] = new String[] {
+//
+//            fileName
+//                // add all the files from database here
+//        };
+        ArrayList<String> fileNames = fileName;
         for(String file : fileNames) documents.add(new Document(file));
 
         // calculate tfidf for all terms in all documents
         for(Document doc : documents) doc.calculateTfidf(documents);
 
-        // generate result
-        for(Document doc : documents) {
+        for (int i=0; i< documents.size(); i++ )
+        {
             Function function = new Function();
-            function.setFunctionContents(functionBody);
-            function.setFileName(fileName);
+            function.setFunctionContents(functionBody.get(i));
+            function.setFileName(fileName.get(i));
 
-            System.out.println(doc.generateRelevantKeywords(function, finalProjectRepository));
+            System.out.println(documents.get(i).generateRelevantKeywords(function, finalProjectRepository));
         }
+        // generate result
+//        for(Document doc : documents) {
+//            Function function = new Function();
+//            function.setFunctionContents(functionBody);
+//            function.setFileName(fileName);
+//
+//            System.out.println(doc.generateRelevantKeywords(function, finalProjectRepository));
+//        }
     }
 }
 
@@ -47,7 +56,7 @@ class Document {
         this.title = t;
         String removeable[] = new String[]{
             ";", "{", "}", "<", ">", "==", "=", "+", "-", "*", "/", "+=", "-=", "++", "--", 
-            "    ", ",", "@", "/**", "*", "**/", "]", "//", "%"
+            "    ", ",", "@", "/**", "*", "**/", "]", "//", "%", "\'", "    ", "\"", "\\n", ".", ":"
         };
         String replaceWithSpace[] = new String[]{
             "(", ")", "["
@@ -76,6 +85,7 @@ class Document {
                     words.remove(i);
                 }
             }
+
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -108,6 +118,7 @@ class Document {
         HashMap<Term, Document> result = new HashMap<Term, Document>();
         List<Keyword> keywordList = new ArrayList<>();
         System.out.println("-----" + title + "-----");
+        double total = 0.0;
         for(Term term : terms){
             //System.out.println(term.term + ": " + term.tfidf);
             Keyword keyword = new Keyword();
@@ -115,9 +126,14 @@ class Document {
             keyword.setFileName(title);
             keyword.setScore(""+(term.tfidf));
             keyword.setKeyword(term.term);
-            keywordList.add(keyword);
+           if (term.term.length() > 2) {
+               keywordList.add(keyword);
+               total += term.tfidf;
+           }
+
 
         }
+        function.setTotalKeywordWeight("" + total);
         function.setKeywordList(keywordList);
         finalProjectRepository.save(function);
 

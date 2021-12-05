@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name="functions")
-public class Function implements Serializable {
+public class Function implements Serializable, Comparable<Function>{
 
     public Function() {
         super();
@@ -31,6 +31,9 @@ public class Function implements Serializable {
 
     @Column(name = "file_content", columnDefinition = "text")
     private String functionContents;
+
+    @Column(name = "total_keyword_weight", columnDefinition = "VARCHAR(128)")
+    private String totalKeywordWeight;
 
 
     public int getFunctionId() {
@@ -63,5 +66,21 @@ public class Function implements Serializable {
 
     public void setFunctionContents(String functionContents) {
         this.functionContents = functionContents;
+    }
+
+    public String getTotalKeywordWeight() {
+        return totalKeywordWeight;
+    }
+
+    public void setTotalKeywordWeight(String totalKeywordWeight) {
+        this.totalKeywordWeight = totalKeywordWeight;
+    }
+
+    @Override
+    public int compareTo(Function u) {
+        if (getTotalKeywordWeight() == null || u.getTotalKeywordWeight() == null) {
+            return 0;
+        }
+        return getTotalKeywordWeight().compareTo(u.getTotalKeywordWeight());
     }
 }

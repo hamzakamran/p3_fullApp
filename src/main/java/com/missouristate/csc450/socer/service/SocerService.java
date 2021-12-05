@@ -7,4 +7,6 @@ import java.util.List;
 public interface SocerService {
     boolean addFunction(String fileName, String fileContents);
     List<Function> getFunctions();
+
+    String getErrorString(String fileName, String fileContents);
 }

@@ -94,7 +94,7 @@
             data.fileContents = fileContent;
             data.fileName = fileName;
 
-            console.log(fileContent);
+            //console.log(fileContent);
 
             	let contextPath = "${pageContext.request.contextPath}";
             	let url = contextPath+ "/addFunction";
@@ -107,6 +107,7 @@
                            		}
                            	})
             	.then(httpresponseservlet => {
+                    //console.log(httpresponseservlet.json());
                     if (httpresponseservlet.ok) {
                         displayCard("success", "File successfully uploaded");
                         return httpresponseservlet.json();
@@ -115,6 +116,8 @@
                         displayCard("error", "File Contains Errors");
 
                     }
+                }).then(alertToDisplay => {
+                    console.log(alertToDisplay);
                 }).catch(error => {
                     //alert("NO!!!!!!! Error = " + error);
                 }).finally(() => {

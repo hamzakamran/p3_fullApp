@@ -35,14 +35,14 @@
             <ul id="results"></ul>
         </div>
         <div class="rightContainer">
-            <pre>
+            <pre id="preTagId">
 // display a number
 void displayNum(int n1, float n2) {
     cout << "The int number is " << n1;
     cout << "The double number is " << n2;
 }
             </pre>
-            <img src="/imgs/download.png" alt="Download" class="downloadBtn">
+            <img src="/imgs/download.png" alt="Download" class="downloadBtn" id="downloader">
         </div>
     </div>
     <div id="card">
@@ -51,6 +51,7 @@ void displayNum(int n1, float n2) {
     </div>
     <script>
         var fileArray = [];
+        var currentFunctionId;
         document.addEventListener("DOMContentLoaded", () => {
             // populate results
 
@@ -74,28 +75,51 @@ void displayNum(int n1, float n2) {
             });
 
             // download button event listener
-            document.querySelector(".downloadBtn").addEventListener("click", () => {
-                let res =
-                    "// display a number\n" +
-                    "void displayNum(int n1, float n2) {\n" +
-                    "   cout << \"The int number is \" << n1;\n" +
-                    "   cout << \"The double number is \" << n2;\n" +
-                    "}";
-                download("test.cpp", res);
+            document.getElementById("downloader").addEventListener("click", () => {
+               let res = "";
+               console.log("download CLicked");
+               for(let i = 0; i<fileArray.length;i++)
+               {
+                   let formattedCode = [];
+                   formattedCode = fileArray.at(i).functionContents.split("\r\n");
+                   //console.log(formattedCode);
+                   if (currentFunctionId == fileArray.at(i).functionId)
+                   {
+                        for (let j = 0; j<formattedCode.length; j++)
+                        {
+                            res += formattedCode + "\r\n";
+                        }
+
+                   }
+               }
+               download("test.cpp", res);
+
+
             });
 
              // download button event listener
             document.querySelector(".leftContainer").addEventListener("click", (e) => {
-                console.log(e.target.innerHTML);
-                let functionName = e.target.innerHTML;
-                functionName.replace("<h3>", "");
-                functionName.replace("</h3>", "");
-                console.log(functionName);
+                console.log(e.target.id);
+                let functionId = e.target.id;
+                currentFunctionId = functionId;
+
+                //console.log(functionName);
                 for(let i = 0; i<fileArray.length;i++)
                 {
-                    if (functionName == fileArray.at(i).fileName)
+                    let formattedCode = [];
+                    formattedCode = fileArray.at(i).functionContents.split("\r\n");
+                    //console.log(formattedCode);
+                    if (functionId == fileArray.at(i).functionId)
                     {
-                        document.querySelector(".rightContainer").innerHTML = fileArray.at(i).functionContents;
+                        document.querySelector(".rightContainer").innerHTML = "";
+                        for(let i = 0; i<formattedCode.length;i++){
+
+
+                            document.querySelector(".rightContainer").innerHTML = document.querySelector(".rightContainer").innerHTML +  "<pre>" + formattedCode.at(i) + "</pre>";
+
+                        }
+
+                        document.querySelector(".rightContainer").innerHTML = document.querySelector(".rightContainer").innerHTML + "<img src=\"/imgs/download.png\" alt=\"Download\" class=\"downloadBtn\" id=\"downloader\" onclick=\"downloadFile()\">";
                         break;
                     }
                 }
@@ -106,9 +130,12 @@ void displayNum(int n1, float n2) {
             let docs = [];
 
                         for (let i = 0; i < fileArray.length; i++) {
-                            console.log(fileArray.at(i).fileName);
+                            //console.log(fileArray.at(i).fileName);
                             docs.push(new Doc(
-                                fileArray.at(i).fileName
+                                fileArray.at(i).fileName,
+                                fileArray.description,
+                                1,
+                                fileArray.at(i).functionId
                             ));
                         }
                         let ul = document.getElementById("results");
@@ -116,10 +143,34 @@ void displayNum(int n1, float n2) {
                         for (let doc of docs) {
                             let li = document.createElement("li");
                             let h3 = document.createElement("h3");
+                            let p1 = document.createElement("p");
+
+                            h3.setAttribute("id", doc.functionId);
 
                             h3.appendChild(document.createTextNode(doc.title));
                             li.appendChild(h3);
 
+                            for (let i = 0; i < fileArray.length; i++) {
+                                //console.log(fileArray);
+                                if (fileArray.at(i).functionId == doc.functionId)
+                                {
+                                    let formattedCode = [];
+                                    formattedCode = fileArray.at(i).functionContents.split("\r\n");
+
+                                    let tempString = formattedCode.at(0);
+                                    tempString = tempString.replace('//', '');
+
+                                    if (tempString == "/*")
+                                    {
+                                        tempString = formattedCode.at(1);
+                                    }
+
+
+
+                                    p1.appendChild(document.createTextNode(tempString));
+                                }
+                            }
+                            li.appendChild(p1);
                             ul.appendChild(li);
                         }
         }
@@ -138,6 +189,29 @@ void displayNum(int n1, float n2) {
         }
 
 
+        function downloadFile()
+        {
+            let res = "";
+            let functionName = "";
+           console.log("download CLicked");
+           for(let i = 0; i<fileArray.length;i++)
+           {
+               let formattedCode = [];
+               formattedCode = fileArray.at(i).functionContents.split("\r\n");
+               //console.log(formattedCode);
+               if (currentFunctionId == fileArray.at(i).functionId)
+               {
+                    for (let j = 0; j<formattedCode.length; j++)
+                    {
+                        res += formattedCode[j] + "\r\n";
+                        functionName = fileArray.at(i).fileName;
+                    }
+
+               }
+           }
+           download(functionName, res);
+        }
+
 
         function searchFunctions(keywords) {
             let data = {};
@@ -145,7 +219,7 @@ void displayNum(int n1, float n2) {
 
                 let contextPath = "${pageContext.request.contextPath}";
                 let url = contextPath+ "/searchFunctions";
-                console.log(url);
+                //console.log(url);
 
                 fetch(url, {
                                 method: "POST",
@@ -162,7 +236,7 @@ void displayNum(int n1, float n2) {
 
                     }
                 }).then(answer => {
-                   console.log(answer);
+                   //console.log(answer);
                    fileArray = answer;
                    populateData();
 
@@ -221,9 +295,9 @@ void displayNum(int n1, float n2) {
 
     .downloadBtn {
         display: block;
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
+        justify-content: flex-end;
+        display: flex;
+        float: right;
         width: 40px;
     }
 

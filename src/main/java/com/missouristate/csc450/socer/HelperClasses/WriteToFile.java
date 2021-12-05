@@ -2,9 +2,10 @@ package com.missouristate.csc450.socer.HelperClasses;
 
 import java.io.FileWriter;   // Import the FileWriter class
 import java.io.IOException;  // Import the IOException class to handle errors
+import java.util.ArrayList;
 
 public class WriteToFile {
-  public WriteToFile(String fileName, String[] fileContent) {
+  public WriteToFile(String fileName, ArrayList<String> fileContent) {
     try {
       FileWriter myWriter = new FileWriter(fileName);
     for (String string: fileContent) {
