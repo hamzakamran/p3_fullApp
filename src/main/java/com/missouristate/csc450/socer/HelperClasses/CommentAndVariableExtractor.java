@@ -2,11 +2,10 @@ package com.missouristate.csc450.socer.HelperClasses;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 //
 
-public class FunctionExtractor {
+public class CommentAndVariableExtractor {
 	private String[] functionComments = new String[50];
 	private String[] theFormattedCode = new String[5000];
 
@@ -15,6 +14,7 @@ public class FunctionExtractor {
 
 	private ArrayList<String> variableNamesArray = new ArrayList<>();
 	private ArrayList<String> commentWordsArray = new ArrayList<>();
+	private ArrayList<String> allWordsArray = new ArrayList<>();
 
 	private int functionIteration = 0;
 	private boolean isInEnum = false;
@@ -27,7 +27,7 @@ public class FunctionExtractor {
 	private boolean hasFirstFunctionStarted;
 	private String errorMessage= "";
 
-	public FunctionExtractor(String fileName) {
+	public CommentAndVariableExtractor(String fileName) {
 		try {
 
 			File file = new File(fileName);
@@ -37,6 +37,7 @@ public class FunctionExtractor {
 
 			//System.out.println("Is the file's functions valid? " + (isValidFunction ? "Yes" : "No"));
 			sc.close();
+			file.delete();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,27 +88,9 @@ public class FunctionExtractor {
 			bIsSingleLineComment = false;
 			sLineText = "";
 			String sNextLine = bigCode.nextLine();
-			if (!isBeforeFirstFunction && iNumOpenBraces != 0) {
-				tempFunctionList.add(sNextLine);
-			}
-			else if (isBeforeFirstFunction && sNextLine.contains("(") && sNextLine.contains(")") && !bIsMultiLineComment)
-			{
-				tempFunctionList.add(sNextLine);
-				isBeforeFirstFunction = false;
-			}
-			else if(!isBeforeFirstFunction && iNumOpenBraces==0 && sNextLine.contains("(") && sNextLine.contains(")") && !bIsMultiLineComment)
-			{
-				tempFunctionList.add(sNextLine);
-			}
-			else if(sNextLine.contains("{")  && !bIsMultiLineComment)
-			{
-				tempFunctionList.add(sNextLine);
-			}
+
 			// System.out.println(sNextLine);
 			for (int i = 0; i < sNextLine.length(); i++) {
-				// System.out.println("LineNum: " + iLineNumber);
-				// System.out.println("INumBraces: " + iNumOpenBraces);
-
 
 				// if the next character is a / and we are not in a string or character
 				if (sNextLine.charAt(i) == '/' && !bIsInString && !bIsInChar) {
@@ -190,19 +173,7 @@ public class FunctionExtractor {
 						&& !bIsInChar) {
 					// System.out.println("Closed");
 					iNumOpenBraces--;
-					if (iNumOpenBraces == 0)
-					{
-						if(tempFunctionList.get(0).length() > 3) {
-							listOfFunctions.add(tempFunctionList);
-						}
 
-						for (String string: tempFunctionList) {
-							//System.out.println(string);
-
-						}
-
-						tempFunctionList = new ArrayList<String>();
-					}
 					bPreviousWasStar = false;
 					bPreviousWasForwardSlash = false;
 					bPreviousWasBackSlash = false;
@@ -248,32 +219,28 @@ public class FunctionExtractor {
 					{
 						sCurrentWord += sNextLine.charAt(i);
 					}
-					else if(sCurrentWord.length()>0){
+					else if(sCurrentWord.length()>1 && !isCppWord(sCurrentWord)){
+						//System.out.println(sCurrentWord);
 						variableNamesArray.add(sCurrentWord);
+						allWordsArray.add(sCurrentWord);
+						sCurrentWord = "";
+					}
+					else if(isCppWord(sCurrentWord) || sCurrentWord.length()<2)
+					{
 						sCurrentWord = "";
 					}
 				}
-				else if(iNumOpenBraces>0){
+				else if (iNumOpenBraces>0){
 					if(isLetter(sNextLine.charAt(i)))
 					{
 						sCurrentWord += sNextLine.charAt(i);
 					}
 					else if(sCurrentWord.length()>0){
 						commentWordsArray.add(sCurrentWord);
-						System.out.println(sCurrentWord);
+						allWordsArray.add(sCurrentWord);
+						//System.out.println(sCurrentWord);
 						sCurrentWord = "";
 					}
-				}
-
-				if (iNumOpenBraces == 0) {
-					if (bHasFunctionStarted) {
-						functionComments[functionIteration] = sGiantString;
-						functionIteration++;
-
-						sGiantString = "";
-
-					}
-					bHasFunctionStarted = false;
 				}
 
 				// what to do at the end of each line
@@ -283,85 +250,53 @@ public class FunctionExtractor {
 						// System.out.println(sBuffer);
 						sGiantString += (sBuffer + ' ');
 					}
-					if (!bIsMultiLineComment && !bIsSingleLineComment && !bIsInString && !bIsInChar) {
-						// System.out.println("Before: " + iSemicolonsNeeded);
-						// System.out.println(sLineText);
-						// iSemicolonsNeeded += semicolonsNeededForKeyword(sLineText);
-						// System.out.println("After: " + iSemicolonsNeeded);
-					}
-
 
 					sBuffer = "";
 					sLineText = "";
 					bIsSingleLineComment = false;
-
-
-				}
+					}
 
 			}
 		}
-		if ((iNumOpenParenthesis) != 0) {
-			bRetV = false;
-			errorMessage = "We suspect a missing parenthesis";
-			// System.out.println(iNumOpenBraces);
-			// System.out.println(iNumOpenParenthesis);
-		}
-		if (iNumOpenBraces != 0)
-		{
-			bRetV = false;
-			errorMessage = "We suspect a missing curly brace";
-		}
-		if (iSemicolonsNeeded > 0) {
-			//System.out.println(iSemicolonsNeeded);
-			errorMessage = "We suspect a missing semicolon";
-			bRetV = false;
-		}
-		for (int j = 0; j < functionComments.length; j++) {
-			if (functionComments[j] != null) {
-				// System.out.println("Function " + (j+1) +" Description: ");
-				// System.out.println(functionComments[j]);
-			}
-		}
+
 		return bRetV;
 	}
 
-	boolean isFunctionDeclaration(String x) {
-		String firstWord = "";
-		String secondWord = "";
-		boolean firstWordSet = false;
-		boolean openP = false;
-		boolean closeP = false;
-		boolean wordHasStarted = false;
+	boolean isCppWord(String x1)
+	{
+		boolean RetV = false;
 
-		String temp = "";
-		for (int i = 0; i < x.length(); i++) {
-			if (isLetter(x.charAt(i))) {
-				temp += x.charAt(i);
-				wordHasStarted = true;
-			} else if (wordHasStarted && firstWordSet == false && !(isLetter(x.charAt(i)))) {
-				firstWord = temp;
-				firstWordSet = true;
-				wordHasStarted = false;
-			} 
-			if (x.charAt(i) == '(') {
-				openP = true;
-			} else if (x.charAt(i) == ')') {
-				closeP = true;
-			} else if (x.charAt(i) == '=') {
-				return false;
-			} else if (x.charAt(i) == ';') {
-				return false;
-			}
-			
+		if (x1.equals("if") || x1.equals("include") || x1.equals("define") || x1.equals("else")
+				|| x1.equals("switch") || x1.equals("while") || x1.equals("case") || x1.equals("template")
+				|| x1.equals("explicit") || x1.equals("public") || x1.equals("protected") || x1.equals("private")
+				|| x1.equals("namespace")|| x1.equals("default") || x1.equals("try") || x1.equals("catch")
+				|| x1.equals("int")|| x1.equals("double") || x1.equals("long") || x1.equals("float") || x1.equals("short")
+				|| x1.equals("char")|| x1.equals("for") || x1.equals("do") || x1.equals("Class") || x1.equals("new")
+				|| x1.equals("not")|| x1.equals("or") || x1.equals("return") || x1.equals("virtual") || x1.equals("void")
+				|| x1.equals("endl")|| x1.equals("null") || x1.equals("extern") || x1.equals("enum") || x1.equals("bool"))
+		{
+			RetV= true;
 		}
-		if (openP && closeP)
-			return true;
-		else
-			return false;
+
+		//System.out.println(x1+" " +RetV);
+
+		return RetV;
 	}
 
 	public ArrayList<ArrayList<String>> getfunctionList()
 	{
 		return listOfFunctions;
+	}
+
+	public ArrayList<String> getVariableNamesArray() {
+		return variableNamesArray;
+	}
+
+	public ArrayList<String> getCommentWordsArray() {
+		return commentWordsArray;
+	}
+
+	public ArrayList<String> getAllWordsArray() {
+		return allWordsArray;
 	}
 }

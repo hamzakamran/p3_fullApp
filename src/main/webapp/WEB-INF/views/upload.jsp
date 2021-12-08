@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<!-- UI 1 SoCeRC shall have an upload page to process uploaded files-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -39,15 +39,18 @@
             dragText = dropArea.querySelector(".header"),
             button = dropArea.querySelector("button"),
             input = dropArea.querySelector("input");
-        let file; //this is a global variable and we'll use it inside multiple functions
+        let file = []; //this is a global variable and we'll use it inside multiple functions
+        let fileDataToAdd = [];
         button.onclick = () => {
             input.click(); //if user click on the button then the input also clicked
         }
         input.addEventListener("change", function() {
             //getting user select file and [0] this means if user select multiple files then we'll select only the first one
-            file = this.files[0];
+            file = this.files;
             dropArea.classList.add("active");
             showFile(); //calling function
+
+            setTimeout(function() { attemptToAddFunction(); }, 10);
         });
         //If user Drag File Over DropArea
         dropArea.addEventListener("dragover", (event) => {
@@ -64,44 +67,58 @@
         dropArea.addEventListener("drop", (event) => {
             event.preventDefault(); //preventing from default behaviour
             //getting user select file and [0] this means if user select multiple files then we'll select only the first one
-            file = event.dataTransfer.files[0];
+            file = event.dataTransfer.files;
+            console.log(file);
             showFile(); //calling function
+
+            setTimeout(function() { attemptToAddFunction(); }, 10);
+
         });
 
         function showFile() {
-            let fileType = file.name.split(".")[1]; //getting selected file type
-            let validExtensions = ["cpp"];
-            if (validExtensions.includes(fileType)) {
-                let fileReader = new FileReader();
-                fileReader.onload = () => {
-                    let fileURL = fileReader.result; //passing user file source in fileURL variable
-                    //console.log(fileURL);
-                    // console.log(fileReader.readAsText(file));
+            fileDataToAdd = [];
+            for (let i=0; i<file.length; i++) {
+                let fileType = file[i].name.split(".")[1]; //getting selected file type
+                let validExtensions = ["cpp"];
+                if (validExtensions.includes(fileType)) {
+                    let fileReader = new FileReader();
+                    fileReader.onload = () => {
+                        let fileURL = fileReader.result; //passing user file source in fileURL variable
+                        //console.log(fileURL);
+                        //console.log(fileName);
 
-                    attemptToAddFunction(fileURL,  file.name);
+                        let singleFileData = {};
+                        singleFileData.fileURL = fileURL;
+                        singleFileData.fileName = file[i].name;
 
+                        fileDataToAdd.push(singleFileData);
+                    }
+                    fileReader.readAsText(file[i]);
+                } else {
+                    displayCard("error", "Error: .cpp files only");
+                    dropArea.classList.remove("active");
+                    dragText.textContent = "Drag & Drop to Upload File";
                 }
-                fileReader.readAsText(file);
-            } else {
-                displayCard("error", "Error: .cpp files only");
-                dropArea.classList.remove("active");
-                dragText.textContent = "Drag & Drop to Upload File";
+
             }
+
         }
 
-        function attemptToAddFunction(fileContent, fileName) {
-            let data = {};
-            data.fileContents = fileContent;
-            data.fileName = fileName;
 
-            //console.log(fileContent);
+        function attemptToAddFunction() {
+
+            let data = fileDataToAdd;
+
+
+               console.log(data);
+
 
             	let contextPath = "${pageContext.request.contextPath}";
             	let url = contextPath+ "/addFunction";
 
             	fetch(url, {
                            		method: "POST",
-                           		body: JSON.stringify(data),
+                           		body: JSON.stringify(fileDataToAdd),
                            		headers:{
                            			"Content-Type": "application/json"
                            		}
@@ -109,10 +126,12 @@
             	.then(httpresponseservlet => {
                     //console.log(httpresponseservlet.json());
                     if (httpresponseservlet.ok) {
+                        // NFR 4 notify user if file was succesffully uploaded
                         displayCard("success", "File successfully uploaded");
                         return httpresponseservlet.json();
                     } else {
                         //alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
+                        // NFR 5 notify user if file was not successfully uploaded
                         displayCard("error", "File Contains Errors");
 
                     }

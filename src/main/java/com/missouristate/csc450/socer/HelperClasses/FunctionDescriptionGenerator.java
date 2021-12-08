@@ -14,7 +14,7 @@ import java.lang.Math;
 
 
 public class FunctionDescriptionGenerator {
-    public FunctionDescriptionGenerator(ArrayList<String> fileName, ArrayList<String> functionBody, FinalProjectRepository finalProjectRepository){
+    public FunctionDescriptionGenerator(ArrayList<String> fileName, ArrayList<String> functionBody, ArrayList<String> functionDescription, FinalProjectRepository finalProjectRepository){
         // create a list of documents
         ArrayList<Document> documents = new ArrayList<Document>();
 //        String fileNames[] = new String[] {
@@ -31,8 +31,12 @@ public class FunctionDescriptionGenerator {
         for (int i=0; i< documents.size(); i++ )
         {
             Function function = new Function();
+            //System.out.println(functionBody.get(i));
             function.setFunctionContents(functionBody.get(i));
-            function.setFileName(fileName.get(i));
+
+            function.setFunctionName(fileName.get(i));
+
+            function.setFunctionDescription(functionDescription.get(i));
 
             System.out.println(documents.get(i).generateRelevantKeywords(function, finalProjectRepository));
         }
@@ -123,7 +127,7 @@ class Document {
             //System.out.println(term.term + ": " + term.tfidf);
             Keyword keyword = new Keyword();
             keyword.setFunction(function);
-            keyword.setFileName(title);
+            keyword.setFunctionName(title);
             keyword.setScore(""+(term.tfidf));
             keyword.setKeyword(term.term);
            if (term.term.length() > 2) {

@@ -26,6 +26,7 @@
     <div class="container">
         <div class="wrapper">
             <img class="search-icon" src="/imgs/search.png">
+            <!-- UI 2 SoCeRC shall have a searchbar to take in user queries-->
             <input class="search" placeholder="Enter keywords or requirements..." type="text" onkeydown="search(this)">
             <img class="clear-icon" src="/imgs/exit.png">
         </div>
@@ -35,14 +36,8 @@
             <ul id="results"></ul>
         </div>
         <div class="rightContainer">
-            <pre id="preTagId">
-// display a number
-void displayNum(int n1, float n2) {
-    cout << "The int number is " << n1;
-    cout << "The double number is " << n2;
-}
-            </pre>
-            <img src="/imgs/download.png" alt="Download" class="downloadBtn" id="downloader">
+            <pre id="preTagId"></pre>
+            <img src="/imgs/download.png" alt="Download" class="downloadBtn" id="downloader" >
         </div>
     </div>
     <div id="card">
@@ -54,9 +49,6 @@ void displayNum(int n1, float n2) {
         var currentFunctionId;
         document.addEventListener("DOMContentLoaded", () => {
             // populate results
-
-            populateData();
-
 
             // search bar
             const clearIcon = document.querySelector(".clear-icon");
@@ -77,7 +69,7 @@ void displayNum(int n1, float n2) {
             // download button event listener
             document.getElementById("downloader").addEventListener("click", () => {
                let res = "";
-               console.log("download CLicked");
+               console.log("download Clicked");
                for(let i = 0; i<fileArray.length;i++)
                {
                    let formattedCode = [];
@@ -128,12 +120,15 @@ void displayNum(int n1, float n2) {
 
         function populateData() {
             let docs = [];
-
+                        if (fileArray.length == 0)
+                        {
+                            displayCard("error", "No matching functions!");
+                        }
                         for (let i = 0; i < fileArray.length; i++) {
-                            //console.log(fileArray.at(i).fileName);
+                            //console.log(fileArray.at(i).functionName);
                             docs.push(new Doc(
-                                fileArray.at(i).fileName,
-                                fileArray.description,
+                                fileArray.at(i).functionName,
+                                fileArray.at(i).functionDescription,
                                 1,
                                 fileArray.at(i).functionId
                             ));
@@ -149,27 +144,9 @@ void displayNum(int n1, float n2) {
 
                             h3.appendChild(document.createTextNode(doc.title));
                             li.appendChild(h3);
-
-                            for (let i = 0; i < fileArray.length; i++) {
-                                //console.log(fileArray);
-                                if (fileArray.at(i).functionId == doc.functionId)
-                                {
-                                    let formattedCode = [];
-                                    formattedCode = fileArray.at(i).functionContents.split("\r\n");
-
-                                    let tempString = formattedCode.at(0);
-                                    tempString = tempString.replace('//', '');
-
-                                    if (tempString == "/*")
-                                    {
-                                        tempString = formattedCode.at(1);
-                                    }
+                            p1.appendChild(document.createTextNode(doc.description));
 
 
-
-                                    p1.appendChild(document.createTextNode(tempString));
-                                }
-                            }
                             li.appendChild(p1);
                             ul.appendChild(li);
                         }
@@ -204,7 +181,7 @@ void displayNum(int n1, float n2) {
                     for (let j = 0; j<formattedCode.length; j++)
                     {
                         res += formattedCode[j] + "\r\n";
-                        functionName = fileArray.at(i).fileName;
+                        functionName = fileArray.at(i).functionName;
                     }
 
                }
@@ -236,7 +213,7 @@ void displayNum(int n1, float n2) {
 
                     }
                 }).then(answer => {
-                   //console.log(answer);
+                   console.log(answer);
                    fileArray = answer;
                    populateData();
 

@@ -10,7 +10,7 @@ public class DeleteFile {
 
 
            File myObj = new File(string);
-           System.out.println(myObj);
+           //System.out.println(myObj);
 
            if (myObj.delete()) {
                System.out.println("Deleted the file: " + myObj.getName());
@@ -22,7 +22,7 @@ public class DeleteFile {
 
     public DeleteFile(String fileName) {
         File myObj = new File(fileName);
-        System.out.println(myObj);
+        //System.out.println(myObj);
 
         if (myObj.delete()) {
             System.out.println("Deleted the file: " + myObj.getName());

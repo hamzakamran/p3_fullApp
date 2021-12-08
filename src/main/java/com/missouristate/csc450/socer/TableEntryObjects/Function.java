@@ -26,15 +26,25 @@ public class Function implements Serializable, Comparable<Function>{
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "function", cascade = {CascadeType.ALL})
     List<Keyword> keywordList = new ArrayList<Keyword>();
 
-    @Column(name = "file_name", columnDefinition = "VARCHAR(64)")
-    private String fileName;
+    @Column(name = "function_name", columnDefinition = "VARCHAR(64)")
+    private String functionName;
 
-    @Column(name = "file_content", columnDefinition = "text")
+    @Column(name = "function_content", columnDefinition = "text")
     private String functionContents;
+
+    @Column(name = "function_description", columnDefinition = "text")
+    private String functionDescription;
 
     @Column(name = "total_keyword_weight", columnDefinition = "VARCHAR(128)")
     private String totalKeywordWeight;
 
+    public String getFunctionDescription() {
+        return functionDescription;
+    }
+
+    public void setFunctionDescription(String functionDescription) {
+        this.functionDescription = functionDescription;
+    }
 
     public int getFunctionId() {
         return functionId;
@@ -52,12 +62,12 @@ public class Function implements Serializable, Comparable<Function>{
         this.keywordList = keywordList;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFunctionName() {
+        return functionName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFunctionName(String fileName) {
+        this.functionName = fileName;
     }
 
     public String getFunctionContents() {

@@ -6,6 +6,7 @@ import com.missouristate.csc450.socer.TableEntryObjects.QFunction;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -19,9 +20,9 @@ public class FinalProjectRepositoryImpl extends QuerydslRepositorySupport implem
     }
 
     @Override
-    public List<Function> getFunctions() {
+    public ArrayList<Function> getFunctions() {
         
-        return from(functionTable).fetch();
+        return (ArrayList<Function>) from(functionTable).fetch();
     }
 
 }

@@ -33,8 +33,8 @@ public class Keyword implements Serializable {
     @Column(name = "score", columnDefinition = "VARCHAR(128)")
     private String score;
 
-    @Column(name = "file_name", columnDefinition = "VARCHAR(64)")
-    private String fileName;
+    @Column(name = "function_name", columnDefinition = "VARCHAR(64)")
+    private String functionName;
 
     public int getPropertyId() {
         return propertyId;
@@ -68,11 +68,11 @@ public class Keyword implements Serializable {
         this.score = score;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String setFunctionName() {
+        return functionName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFunctionName(String functionName) {
+        this.functionName = functionName;
     }
 }
