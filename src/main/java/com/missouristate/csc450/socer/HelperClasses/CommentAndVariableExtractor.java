@@ -221,8 +221,14 @@ public class CommentAndVariableExtractor {
 					}
 					else if(sCurrentWord.length()>1 && !isCppWord(sCurrentWord)){
 						//System.out.println(sCurrentWord);
-						variableNamesArray.add(sCurrentWord);
-						allWordsArray.add(sCurrentWord);
+						if (!variableNamesArray.contains(sCurrentWord))
+						{
+							allWordsArray.add(sCurrentWord);
+							variableNamesArray.add(sCurrentWord);
+						}
+
+
+
 						sCurrentWord = "";
 					}
 					else if(isCppWord(sCurrentWord) || sCurrentWord.length()<2)
