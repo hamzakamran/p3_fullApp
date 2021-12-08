@@ -70,9 +70,19 @@ public class SocerServiceImpl implements SocerService {
             }
 
         }
-        for (String string : findFunctionNames(functionList)) {
-            listOfFunctionNames.add(string);
+        for(int i =0;i<findFunctionNames(functionList).size();i++)
+        {
+            if(listOfFunctionNames.contains(findFunctionNames(functionList).get(i)))
+            {
+                listOfFunctionNames.add(findFunctionNames(functionList).get(i) + "" + i);
+            }
+            else
+            {
+                listOfFunctionNames.add(findFunctionNames(functionList).get(i));
+            }
+
         }
+
 
             for (int i = 0; i < functionList.size(); i++)
             {
