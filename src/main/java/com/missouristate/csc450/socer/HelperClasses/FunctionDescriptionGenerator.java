@@ -14,7 +14,7 @@ import java.lang.Math;
 
 
 public class FunctionDescriptionGenerator {
-    public FunctionDescriptionGenerator(ArrayList<String> fileName, ArrayList<String> functionBody, ArrayList<String> functionDescription, FinalProjectRepository finalProjectRepository){
+    public FunctionDescriptionGenerator(ArrayList<String> fileName, ArrayList<String> functionBody, ArrayList<String> functionDescription, ArrayList<String> fileNamesMapped, ArrayList<String> fileContentsMapped, FinalProjectRepository finalProjectRepository){
         // create a list of documents
         ArrayList<Document> documents = new ArrayList<Document>();
 //        String fileNames[] = new String[] {
@@ -33,9 +33,9 @@ public class FunctionDescriptionGenerator {
             Function function = new Function();
             //System.out.println(functionBody.get(i));
             function.setFunctionContents(functionBody.get(i));
-
+            function.setFileName(fileNamesMapped.get(i));
             function.setFunctionName(fileName.get(i));
-
+            function.setFileContents(fileContentsMapped.get(i));
             function.setFunctionDescription(functionDescription.get(i));
 
             System.out.println(documents.get(i).generateRelevantKeywords(function, finalProjectRepository));

@@ -27,7 +27,6 @@ public class SocerServiceImpl implements SocerService {
     public boolean addFunction(ArrayList<String> fileName, ArrayList<String> fileContents) {
 
         ArrayList<ArrayList<String>> fileContentsFormattedArray = new ArrayList<>();
-
         ArrayList<String> functionContentList = new ArrayList<String>();
 
         for (int i =0; i<fileName.size();i++) {
@@ -38,26 +37,40 @@ public class SocerServiceImpl implements SocerService {
             }
             fileContentsFormattedArray.add(fileContentsFormatted);
         }
-//        ArrayList<String> fileNameArray = new ArrayList<String>();
-//        fileNameArray.add("EvenNurs.cpp");
-//        fileNameArray.add("p27_StructuredDataFunctionTransfer.cpp");
-//        fileNameArray.add("LocationOfTheSmallestNumber.cpp");
-//        fileNameArray.add("FuturePopulation.cpp");
-
-
 
         CreateFile createFile = new CreateFile(fileName);
         WriteToFile writeToFile = new WriteToFile(fileName, fileContentsFormattedArray);
 
-        doesFileCompile(fileName);
-
-        ArrayList<FunctionExtractor> extractionArray= new ArrayList<>();
-        for (String string: fileName) {
-            // FR 1 Socer can extract valid functions from C++ files
-            FunctionExtractor functionExtractor = new FunctionExtractor(string);
-            extractionArray.add(functionExtractor);
+        ArrayList<String> transitionNames = new ArrayList<>();
+        ArrayList<String> finalFileNames = new ArrayList<>();
+        ArrayList<String> finalFileContents = new ArrayList<>();
+        transitionNames = doesFileCompile(fileName);
+        for (int ppp = 0; ppp< fileName.size(); ppp++)
+        {
+            if(transitionNames.contains(fileName.get(ppp)))
+            {
+                finalFileNames.add(fileName.get(ppp));
+                finalFileContents.add(fileContents.get(ppp));
+            }
         }
-        DeleteFile deleteFile = new DeleteFile(fileName);
+
+
+        ArrayList<String> fileNamesMapped= new ArrayList<>();
+        ArrayList<String> fileContentsMapped= new ArrayList<>();
+        ArrayList<FunctionExtractor> extractionArray= new ArrayList<>();
+        for (int z = 0; z< finalFileNames.size(); z++){
+
+            // FR 1 Socer can extract valid functions from C++ files
+            FunctionExtractor functionExtractor = new FunctionExtractor(finalFileNames.get(z));
+            extractionArray.add(functionExtractor);
+
+            for (int p = 0; p<functionExtractor.getfunctionList().size();p++)
+            {
+                fileNamesMapped.add(finalFileNames.get(z));
+                fileContentsMapped.add(finalFileContents.get(z));
+            }
+        }
+
 
         ArrayList<ArrayList<String>> functionList = new ArrayList<>();
         ArrayList<String> listOfFunctionNames = new ArrayList<>();
@@ -68,6 +81,7 @@ public class SocerServiceImpl implements SocerService {
             for (ArrayList<String> arrayLists : functionExtractor.getfunctionList()) {
                 functionList.add(arrayLists);
             }
+
 
         }
         for(int i =0;i<findFunctionNames(functionList).size();i++)
@@ -107,11 +121,12 @@ public class SocerServiceImpl implements SocerService {
                 System.out.println(description);
                 descriptionList.add(description);
             }
-            FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(listOfFunctionNames, functionContentList, descriptionList, finalProjectRepository);
-            DeleteFile deleteFile1 = new DeleteFile(listOfFunctionNames);
+            FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(listOfFunctionNames, functionContentList, descriptionList, fileNamesMapped,fileContentsMapped, finalProjectRepository);
 
 
 
+        DeleteFile deleteFile = new DeleteFile(fileName);
+        DeleteFile deleteFile1 = new DeleteFile(listOfFunctionNames);
         return true;
     }
 
@@ -185,8 +200,9 @@ public class SocerServiceImpl implements SocerService {
         return listOfFunctionNames;
     }
 
-    private void doesFileCompile(ArrayList<String> fileNameArray)
+    private ArrayList<String> doesFileCompile(ArrayList<String> fileNameArray)
     {
+        ArrayList<String> returnValue = new ArrayList<>();
         int counterVariable = 0;
         for (String fileNameValue: fileNameArray) {
             try {
@@ -208,21 +224,26 @@ public class SocerServiceImpl implements SocerService {
         }
         Long longTime = System.currentTimeMillis();
         try {
-            Thread.sleep(1500);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        for (File myObj: fileArrayList) {
-            if (myObj.exists()) {
-                System.out.println("File has compiled: " + myObj.getName());
+        for (int j =0; j< fileArrayList.size(); j++){
+
+            if (fileArrayList.get(j).exists()) {
+                System.out.println("File has compiled: " + fileArrayList.get(j).getName());
+                returnValue.add(fileNameArray.get(j));
             } else {
-                System.out.println("File has not compiled: " + myObj.getName());
+                System.out.println("File has not compiled: " + fileArrayList.get(j).getName());
+                DeleteFile deleteFile = new DeleteFile(fileNameArray.get(j));
             }
         }
         System.out.println(System.currentTimeMillis()-longTime);
 
         DeleteFile deleteFile = new DeleteFile(fileOutputArrayList);
+
+        return returnValue;
     }
 
     @Override

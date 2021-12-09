@@ -38,6 +38,28 @@ public class Function implements Serializable, Comparable<Function>{
     @Column(name = "total_keyword_weight", columnDefinition = "VARCHAR(128)")
     private String totalKeywordWeight;
 
+    @Column(name = "file_name", columnDefinition = "VARCHAR(128)")
+    private String fileName;
+
+    @Column(name = "file_content", columnDefinition = "text")
+    private String fileContents;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileContents() {
+        return fileContents;
+    }
+
+    public void setFileContents(String fileContents) {
+        this.fileContents = fileContents;
+    }
+
     public String getFunctionDescription() {
         return functionDescription;
     }

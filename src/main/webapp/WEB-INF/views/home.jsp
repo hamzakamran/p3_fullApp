@@ -73,7 +73,7 @@
                for(let i = 0; i<fileArray.length;i++)
                {
                    let formattedCode = [];
-                   formattedCode = fileArray.at(i).functionContents.split("\r\n");
+                   formattedCode = fileArray.at(i).fileContents.split("\r\n");
                    //console.log(formattedCode);
                    if (currentFunctionId == fileArray.at(i).functionId)
                    {
@@ -103,6 +103,7 @@
                     //console.log(formattedCode);
                     if (functionId == fileArray.at(i).functionId)
                     {
+                        console.log(fileArray);
                         document.querySelector(".rightContainer").innerHTML = "";
                         for(let i = 0; i<formattedCode.length;i++){
 
@@ -174,19 +175,19 @@
            for(let i = 0; i<fileArray.length;i++)
            {
                let formattedCode = [];
-               formattedCode = fileArray.at(i).functionContents.split("\r\n");
+               formattedCode = fileArray.at(i).fileContents.split("\r\n");
                //console.log(formattedCode);
                if (currentFunctionId == fileArray.at(i).functionId)
                {
                     for (let j = 0; j<formattedCode.length; j++)
                     {
                         res += formattedCode[j] + "\r\n";
-                        functionName = fileArray.at(i).functionName;
+                        fileName = fileArray.at(i).fileName;
                     }
 
                }
            }
-           download(functionName, res);
+           download(fileName, res);
         }
 
 

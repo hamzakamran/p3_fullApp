@@ -21,6 +21,7 @@ public class DeleteFile {
    }
 
     public DeleteFile(String fileName) {
+
         File myObj = new File(fileName);
         //System.out.println(myObj);
 
