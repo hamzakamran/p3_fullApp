@@ -24,7 +24,7 @@ public class SocerServiceImpl implements SocerService {
 
 
     @Override
-    public boolean addFunction(ArrayList<String> fileName, ArrayList<String> fileContents) {
+    public ArrayList<String> addFunction(ArrayList<String> fileName, ArrayList<String> fileContents) {
 
         ArrayList<ArrayList<String>> fileContentsFormattedArray = new ArrayList<>();
         ArrayList<String> functionContentList = new ArrayList<String>();
@@ -42,6 +42,7 @@ public class SocerServiceImpl implements SocerService {
         WriteToFile writeToFile = new WriteToFile(fileName, fileContentsFormattedArray);
 
         ArrayList<String> transitionNames = new ArrayList<>();
+        ArrayList<String> errorFiles = new ArrayList<>();
         ArrayList<String> finalFileNames = new ArrayList<>();
         ArrayList<String> finalFileContents = new ArrayList<>();
         transitionNames = doesFileCompile(fileName);
@@ -51,6 +52,10 @@ public class SocerServiceImpl implements SocerService {
             {
                 finalFileNames.add(fileName.get(ppp));
                 finalFileContents.add(fileContents.get(ppp));
+            }
+            else
+            {
+                errorFiles.add(fileName.get(ppp));
             }
         }
 
@@ -127,7 +132,7 @@ public class SocerServiceImpl implements SocerService {
 
         DeleteFile deleteFile = new DeleteFile(fileName);
         DeleteFile deleteFile1 = new DeleteFile(listOfFunctionNames);
-        return true;
+        return errorFiles;
     }
 
     @Override

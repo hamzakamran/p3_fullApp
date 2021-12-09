@@ -22,6 +22,20 @@
             </ul>
         </div>
     </header>
+
+    <div class="critArea">
+        <h3 class="criteria"> Acceptance Criteria for Uploaded Files</h3>
+          <ul class="criteria-list">
+            <li>Uploaded documents must end with the .cpp file extension.</li>
+            <li>Uploaded C++ documents must follow proper syntax and contain no syntax errors.</li>
+            <li>Files must be standalone files (cannot contain dependencies from other files).</li>
+            <li>Function calls are expected to consist of one line (ex: funcEx(int x, int y).</li>
+            <li>Braces are expected are loops (including single line loops).</li>
+            <li>Naming conventions cannot be ambiguous (ex: int score = 4 is preferred over int x = 4).</li>
+          </ul>
+          </div>
+
+
     <div class="drag-area">
         <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
         <div class="header">Drag & Drop to Upload File</div>
@@ -35,6 +49,7 @@
     </div>
 
     <script>
+        var functionsThatWereNotAdded;
         const dropArea = document.querySelector(".drag-area"),
             dragText = dropArea.querySelector(".header"),
             button = dropArea.querySelector("button"),
@@ -127,15 +142,17 @@
                     //console.log(httpresponseservlet.json());
                     if (httpresponseservlet.ok) {
                         // NFR 4 notify user if file was succesffully uploaded
-                        displayCard("success", "File successfully uploaded");
+
                         return httpresponseservlet.json();
                     } else {
                         //alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
                         // NFR 5 notify user if file was not successfully uploaded
-                        displayCard("error", "File Contains Errors");
+                        displayCard("error", "Error with Files");
 
                     }
                 }).then(alertToDisplay => {
+                    functionsThatWereNotAdded = alertToDisplay;
+                    displayErrorMessages();
                     console.log(alertToDisplay);
                 }).catch(error => {
                     //alert("NO!!!!!!! Error = " + error);
@@ -143,12 +160,43 @@
 
                 });
         }
+
+        function displayErrorMessages()
+        {
+            if(functionsThatWereNotAdded.length == 0)
+            {
+                displayCard("success", "File(s) successfully uploaded");
+            }
+            else if (functionsThatWereNotAdded.length == 1){
+                displayCard("error", functionsThatWereNotAdded[i] + " contains errors");
+
+            }
+            else {
+                 displayCard("error", functionsThatWereNotAdded.length + " files contain errors");
+
+            }
+        }
     </script>
 </body>
 
 </html>
 
 <style>
+    .critArea {
+        border: 2px dashed var(--purple);
+        height: px;
+        width: 700px;
+        border-radius: 5px;
+        margin: 10px auto;
+        margin-bottom: -70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: var(--purple);
+    }
+
+
     .drag-area {
         border: 2px dashed var(--purple);
         height: 500px;

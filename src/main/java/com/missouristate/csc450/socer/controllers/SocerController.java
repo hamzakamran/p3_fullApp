@@ -41,8 +41,9 @@ public class SocerController {
         return "upload";
     }
 
+    @ResponseBody
     @PostMapping(value = "/addFunction", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addFunction(@RequestBody ArrayList<FileNameAndContents> data, Model model) {
+    public ArrayList<String> addFunction(@RequestBody ArrayList<FileNameAndContents> data, Model model) {
         // NFR 3 Uploaded function will be able to be searched within 24 hours
 
         System.out.println(data.size());
@@ -58,14 +59,9 @@ public class SocerController {
             fileContentsArray.add(fileContents);
         }
 
-        boolean willFunctionBeAdded = socerService.addFunction(fileNamesArray, fileContentsArray);
-        if (!willFunctionBeAdded)
-        {
-            //String errorMessage = socerService.getErrorString(fileName, fileContents);
-            //.out.println(errorMessage);
-            //return errorMessage ;
-        }
-        return "redirect:/home";
+        ArrayList<String> willFunctionBeAdded = socerService.addFunction(fileNamesArray, fileContentsArray);
+        return willFunctionBeAdded;
+//        return "redirect:/home";
     }
 
     @ResponseBody

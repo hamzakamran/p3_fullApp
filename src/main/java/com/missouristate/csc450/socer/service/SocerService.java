@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface SocerService {
-    boolean addFunction(ArrayList<String> fileName, ArrayList<String> fileContents);
+    ArrayList<String> addFunction(ArrayList<String> fileName, ArrayList<String> fileContents);
     List<Function> getFunctions();
     List<Function> getSearchContents(String keywords);
 
