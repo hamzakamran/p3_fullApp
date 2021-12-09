@@ -183,7 +183,7 @@
 
 <style>
     .critArea {
-        border: 2px dashed var(--purple);
+
         height: px;
         width: 700px;
         border-radius: 5px;
