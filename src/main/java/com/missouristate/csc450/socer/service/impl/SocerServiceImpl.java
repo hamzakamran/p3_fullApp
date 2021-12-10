@@ -263,7 +263,11 @@ public class SocerServiceImpl implements SocerService {
         searchBarContents = searchBarContents.replace("\"", "");
         //System.out.println(searchBarContents);
         String[] searchBarList = searchBarContents.split(" ");
-
+        int limitTheNumberOfWords = searchBarList.length;
+        if(limitTheNumberOfWords>100)
+        {
+            limitTheNumberOfWords = 100;
+        }
 
         ArrayList<Function> functionList = getFunctions();
         ArrayList<Function> functionListAfterSearch = new ArrayList<>();
@@ -273,8 +277,8 @@ public class SocerServiceImpl implements SocerService {
             double startingScore = Double.parseDouble(function.getTotalKeywordWeight());
             double score = 0.0;
             for (Keyword keywordValue: function.getKeywordList()) {
-                for (String string: searchBarList) {
-                    if (keywordValue.getKeyword().contains(string.toLowerCase(Locale.ROOT)))
+                for (int q=0;q<limitTheNumberOfWords;q++) {
+                    if (keywordValue.getKeyword().contains(searchBarList[q].toLowerCase(Locale.ROOT)))
                     {
                         score = score + Double.parseDouble(keywordValue.getScore());
                         numberOfMatchingWords++;

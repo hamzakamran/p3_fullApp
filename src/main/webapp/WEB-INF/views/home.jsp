@@ -130,25 +130,37 @@
                             docs.push(new Doc(
                                 fileArray.at(i).functionName,
                                 fileArray.at(i).functionDescription,
+                                fileArray.at(i).fileName,
                                 1,
                                 fileArray.at(i).functionId
                             ));
                         }
+                        console.log(fileArray);
                         let ul = document.getElementById("results");
                         ul.innerHTML = "";
                         for (let doc of docs) {
                             let li = document.createElement("li");
                             let h3 = document.createElement("h3");
                             let p1 = document.createElement("p");
+                            let p2 = document.createElement("p");
+                            let b1 = document.createElement("br");
 
                             h3.setAttribute("id", doc.functionId);
 
                             h3.appendChild(document.createTextNode(doc.title));
                             li.appendChild(h3);
+
+                            p2.appendChild(document.createTextNode(doc.fileName));
+                            li.appendChild(p2);
+                            li.appendChild(b1);
+
+
                             p1.appendChild(document.createTextNode(doc.description));
-
-
                             li.appendChild(p1);
+
+
+
+
                             ul.appendChild(li);
                         }
         }
