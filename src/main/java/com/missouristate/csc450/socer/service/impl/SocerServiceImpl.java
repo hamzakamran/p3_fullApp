@@ -45,7 +45,8 @@ public class SocerServiceImpl implements SocerService {
         ArrayList<String> errorFiles = new ArrayList<>();
         ArrayList<String> finalFileNames = new ArrayList<>();
         ArrayList<String> finalFileContents = new ArrayList<>();
-        transitionNames = doesFileCompile(fileName);
+//        transitionNames = doesFileCompile(fileName);
+        transitionNames = fileName;
         for (int ppp = 0; ppp< fileName.size(); ppp++)
         {
             if(transitionNames.contains(fileName.get(ppp)))
@@ -215,17 +216,23 @@ public class SocerServiceImpl implements SocerService {
                 System.out.println(output);
                 counterVariable++;
 
-            } catch (IOException e) {
+        } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
         ArrayList<File> fileArrayList = new ArrayList<File>();
+        ArrayList<File> fileArrayListApple = new ArrayList<File>();
+
         ArrayList<String> fileOutputArrayList = new ArrayList<String>();
         for (int i = 0; i<fileNameArray.size();i++) {
             File myObj = new File("out"+i + ".exe");
             fileArrayList.add(myObj);
             fileOutputArrayList.add("out"+i + ".exe");
+
+            File myObj1 = new File("out"+i + ".out");
+            fileArrayList.add(myObj1);
+            fileOutputArrayList.add("out"+i + ".out");
         }
         Long longTime = System.currentTimeMillis();
         try {
@@ -241,9 +248,22 @@ public class SocerServiceImpl implements SocerService {
                 returnValue.add(fileNameArray.get(j));
             } else {
                 System.out.println("File has not compiled: " + fileArrayList.get(j).getName());
-                DeleteFile deleteFile = new DeleteFile(fileNameArray.get(j));
+
             }
         }
+        if(returnValue.size() == 0) {
+            for (int j = 0; j < fileArrayListApple.size(); j++) {
+
+                if (fileArrayListApple.get(j).exists()) {
+                    System.out.println("File has compiled: " + fileArrayListApple.get(j).getName());
+                    returnValue.add(fileNameArray.get(j));
+                } else {
+                    System.out.println("File has not compiled: " + fileArrayList.get(j).getName());
+                    DeleteFile deleteFile = new DeleteFile(fileNameArray.get(j));
+                }
+            }
+        }
+
         System.out.println(System.currentTimeMillis()-longTime);
 
         DeleteFile deleteFile = new DeleteFile(fileOutputArrayList);
@@ -299,4 +319,12 @@ public class SocerServiceImpl implements SocerService {
 
         return functionListAfterSearch;
     }
+
+    public void prePopulateDatabase()
+    {
+
+
+    }
+
+
 }
