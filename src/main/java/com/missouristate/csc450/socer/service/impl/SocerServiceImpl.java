@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import javax.lang.model.type.ArrayType;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +28,7 @@ public class SocerServiceImpl implements SocerService {
 
     @Override
     public ArrayList<String> addFunction(ArrayList<String> fileName, ArrayList<String> fileContents) {
+
 
         ArrayList<ArrayList<String>> fileContentsFormattedArray = new ArrayList<>();
         ArrayList<String> functionContentList = new ArrayList<String>();
@@ -45,8 +49,8 @@ public class SocerServiceImpl implements SocerService {
         ArrayList<String> errorFiles = new ArrayList<>();
         ArrayList<String> finalFileNames = new ArrayList<>();
         ArrayList<String> finalFileContents = new ArrayList<>();
-//        transitionNames = doesFileCompile(fileName);
-        transitionNames = fileName;
+        transitionNames = doesFileCompile(fileName);
+
         for (int ppp = 0; ppp< fileName.size(); ppp++)
         {
             if(transitionNames.contains(fileName.get(ppp)))
@@ -124,7 +128,7 @@ public class SocerServiceImpl implements SocerService {
                         description += (string + " ");
                     }
                 }
-                System.out.println(description);
+               // System.out.println(description);
                 descriptionList.add(description);
             }
             FunctionDescriptionGenerator functionDescriptionGenerator = new FunctionDescriptionGenerator(listOfFunctionNames, functionContentList, descriptionList, fileNamesMapped,fileContentsMapped, finalProjectRepository);
@@ -138,7 +142,9 @@ public class SocerServiceImpl implements SocerService {
 
     @Override
     public ArrayList<Function> getFunctions(){
-        return finalProjectRepository.getFunctions();
+        ArrayList<Function> returnValue = finalProjectRepository.getFunctions();
+
+        return returnValue;
     }
 
     @Override
@@ -212,8 +218,8 @@ public class SocerServiceImpl implements SocerService {
         int counterVariable = 0;
         for (String fileNameValue: fileNameArray) {
             try {
-                String output = Runtime.getRuntime().exec("g++ .\\" + fileNameValue + " -o out" + counterVariable).toString();
-                System.out.println(output);
+                String output = Runtime.getRuntime().exec("g++ " + fileNameValue + " -o out" + counterVariable).toString();
+                //System.out.println(output);
                 counterVariable++;
 
         } catch (IOException e) {
@@ -225,14 +231,15 @@ public class SocerServiceImpl implements SocerService {
         ArrayList<File> fileArrayListApple = new ArrayList<File>();
 
         ArrayList<String> fileOutputArrayList = new ArrayList<String>();
+        ArrayList<String> fileOutputArrayListApple = new ArrayList<String>();
         for (int i = 0; i<fileNameArray.size();i++) {
             File myObj = new File("out"+i + ".exe");
             fileArrayList.add(myObj);
             fileOutputArrayList.add("out"+i + ".exe");
 
-            File myObj1 = new File("out"+i + ".out");
-            fileArrayList.add(myObj1);
-            fileOutputArrayList.add("out"+i + ".out");
+            File myObj1 = new File("out"+i);
+            fileArrayListApple.add(myObj1);
+            fileOutputArrayListApple.add("out"+i);
         }
         Long longTime = System.currentTimeMillis();
         try {
@@ -264,9 +271,10 @@ public class SocerServiceImpl implements SocerService {
             }
         }
 
-        System.out.println(System.currentTimeMillis()-longTime);
+//        System.out.println(System.currentTimeMillis()-longTime);
 
         DeleteFile deleteFile = new DeleteFile(fileOutputArrayList);
+        DeleteFile deleteFile1 = new DeleteFile(fileOutputArrayListApple);
 
         return returnValue;
     }
@@ -274,6 +282,8 @@ public class SocerServiceImpl implements SocerService {
     @Override
     public ArrayList<Function> getSearchContents(String keywords)
     {
+        ArrayList<Function> functionList = getFunctions();
+
         // add logic here to do something with the keywords that were in the search bar
         String searchBarContents = keywords;
         //System.out.println(searchBarContents);
@@ -289,7 +299,7 @@ public class SocerServiceImpl implements SocerService {
             limitTheNumberOfWords = 100;
         }
 
-        ArrayList<Function> functionList = getFunctions();
+
         ArrayList<Function> functionListAfterSearch = new ArrayList<>();
         for (Function function: functionList) {
             boolean shouldFunctionBeenAdded = false;
@@ -308,7 +318,7 @@ public class SocerServiceImpl implements SocerService {
             }
             if (shouldFunctionBeenAdded) {
                 function.setTotalKeywordWeight(String.valueOf(score/startingScore));
-                System.out.println(score/startingScore + " " + function.getFunctionName() + " number of matching words: " + numberOfMatchingWords);
+              //  System.out.println(score/startingScore + " " + function.getFunctionName() + " number of matching words: " + numberOfMatchingWords);
                 functionListAfterSearch.add(function);
             }
         }
@@ -320,9 +330,15 @@ public class SocerServiceImpl implements SocerService {
         return functionListAfterSearch;
     }
 
-    public void prePopulateDatabase()
-    {
 
+    public void prePopulateDatabase() throws IOException {
+        ArrayList<String> fileName = new ArrayList<>();
+        ArrayList<String> fileContent = new ArrayList<>();
+        CreateFile createFile = new CreateFile("out0.exe");
+        fileName.add("PrePopulatedFunctions.cpp");
+        String content = Files.readString(Paths.get("PrePopulatedFunctions.cpp"), StandardCharsets.UTF_8);
+        fileContent.add(content);
+        addFunction(fileName,fileContent);
 
     }
 

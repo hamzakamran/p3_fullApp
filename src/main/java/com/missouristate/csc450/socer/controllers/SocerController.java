@@ -32,12 +32,24 @@ public class SocerController {
 
     @GetMapping({"/", "/home"})
     public String socer(Model model){
+        try {
+            if (socerService.getFunctions().size()<9)
+            {socerService.prePopulateDatabase();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "home";
     }
 
 
     @GetMapping({"/upload"})
     public String upload(Model model){
+        try {
+            if (socerService.getFunctions().size()<9)
+            {socerService.prePopulateDatabase();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "upload";
     }
 
@@ -45,6 +57,8 @@ public class SocerController {
     @PostMapping(value = "/addFunction", produces = MediaType.APPLICATION_JSON_VALUE)
     public ArrayList<String> addFunction(@RequestBody ArrayList<FileNameAndContents> data, Model model) {
         // NFR 3 Uploaded function will be able to be searched within 24 hours
+
+
 
         System.out.println(data.size());
         ArrayList<String> fileNamesArray = new ArrayList<>();

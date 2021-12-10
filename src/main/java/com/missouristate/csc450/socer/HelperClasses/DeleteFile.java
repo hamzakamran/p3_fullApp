@@ -13,9 +13,9 @@ public class DeleteFile {
            //System.out.println(myObj);
 
            if (myObj.delete()) {
-               System.out.println("Deleted the file: " + myObj.getName());
+  //             System.out.println("Deleted the file: " + myObj.getName());
            } else {
-               System.out.println("Failed to delete the file.");
+  //             System.out.println("Failed to delete the file.");
            }
        }
    }
@@ -26,9 +26,9 @@ public class DeleteFile {
         //System.out.println(myObj);
 
         if (myObj.delete()) {
-            System.out.println("Deleted the file: " + myObj.getName());
+ //           System.out.println("Deleted the file: " + myObj.getName());
         } else {
-            System.out.println("Failed to delete the file.");
+//            System.out.println("Failed to delete the file.");
         }
     }
 }
