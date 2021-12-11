@@ -58,7 +58,7 @@ drop table if exists `functions`;
 -- F.R. 3 Maintaining a database of C++ functions
 CREATE TABLE functions (
     --LDR 1 SoCeR shall assign all functions a unique id
-    --LDR 2 SoCeR storage system shall assign ids that are valid in the 32 bit system
+    --LDR 2 SoCeR storage system shall assign up to 32,767 valid ID numbers
     function_id INTEGER AUTO_INCREMENT PRIMARY KEY
     ,function_name VARCHAR(64)  NOT NULL
     ,function_content text NOT NULL
