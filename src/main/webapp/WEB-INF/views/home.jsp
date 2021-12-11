@@ -1,5 +1,58 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
+
+<!--
+-- AUTHORS --
++ Hamza Kamran
++ Adam Gibbons
++ Kimmy Thach
+
+-- DESCRIPTION: --
+This is the home page that contains the search functionality. It can display the results from a search as well as let you enter a new search
+
+-- FUNCTIONAL REQUIREMENT(S) MET: --
++ FR.7 Found in: downloadFile()
+
+-- NONFUNCTIONAL REQUIREMENT(S) MET: --
++ None
+
+-- USER INTERFACE REQUIREMENT(S) MET: --
++ UI.2 Found in: input class="search" placeholder="Enter keywords or requirements..."
+
+-- SOFTWARE INTERFACE REQUIREMENT(S) MET: --
++ None
+
+-- LOGICAL DATABASE REQUIREMENT(S) MET: --
++ None
+
+--------------------------------------
+
+The MIT License (MIT)
+
+Copyright (c) 2021 OpenFin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+
 
 <head>
     <meta charset="UTF-8">
@@ -69,7 +122,7 @@
             // download button event listener
             document.getElementById("downloader").addEventListener("click", () => {
                let res = "";
-               console.log("download Clicked");
+
                for(let i = 0; i<fileArray.length;i++)
                {
                    let formattedCode = [];
@@ -178,7 +231,7 @@
             }
         }
 
-
+        //FR.7 SoCeRC++ shall allow users to download a function’s original file.
         function downloadFile()
         {
             let res = "";

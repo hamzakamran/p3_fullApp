@@ -1,5 +1,60 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
+
+<!--
+-- AUTHORS --
++ Hamza Kamran
++ Adam Gibbons
++ Kimmy Thach
+
+-- DESCRIPTION: --
+This is the file that shows the upload page. It will process any file that the user uploads and will pass that data to the java code
+
+
+-- FUNCTIONAL REQUIREMENT(S) MET: --
++ FR.5 Found in: attemptToAddFunction
++ FR.6 Found in: attemptToAddFunction
+
+-- NONFUNCTIONAL REQUIREMENT(S) MET: --
++ None
+
+-- USER INTERFACE REQUIREMENT(S) MET: --
++ UI.1 Found in: This File
+
+-- SOFTWARE INTERFACE REQUIREMENT(S) MET: --
++ None
+
+-- LOGICAL DATABASE REQUIREMENT(S) MET: --
++ None
+
+--------------------------------------
+
+The MIT License (MIT)
+
+Copyright (c) 2021 OpenFin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+
+
 <!-- UI 1 SoCeRC shall have an upload page to process uploaded files-->
 <head>
     <meta charset="UTF-8">
@@ -141,12 +196,12 @@
             	.then(httpresponseservlet => {
                     //console.log(httpresponseservlet.json());
                     if (httpresponseservlet.ok) {
-                        // NFR 4 notify user if file was succesffully uploaded
+                        // FR 5 notify user if file was successfully uploaded
 
                         return httpresponseservlet.json();
                     } else {
                         //alert("NO!!!!!!!! Bad Http Status: " + httpresponseservlet.status);
-                        // NFR 5 notify user if file was not successfully uploaded
+                        // FR 6 notify user if file was not successfully uploaded
                         displayCard("error", "Error with Files");
 
                     }

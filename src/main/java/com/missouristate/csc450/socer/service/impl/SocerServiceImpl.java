@@ -1,3 +1,56 @@
+/**
+
+ -- AUTHORS --
+ + Hamza Kamran
+ + Adam Gibbons
+ + Kimmy Thach
+
+ -- DESCRIPTION: --
+ This is the service layer that has almost all the logic when it comes to searching through functions or when to add or how to add to the database.
+
+ -- FUNCTIONAL REQUIREMENT(S) MET: --
+ + FR 1 Found in: addFunction
+ + FR 2 Found in: addFunction
+ + FR.3.2 Found in: addFunction
+ + FR 4 Found in: getSearchContents
+
+ -- NONFUNCTIONAL REQUIREMENT(S) MET: --
+ + None
+
+ -- USER INTERFACE REQUIREMENT(S) MET: --
+ + None
+
+ -- SOFTWARE INTERFACE REQUIREMENT(S) MET: --
+ + None
+
+ -- LOGICAL DATABASE REQUIREMENT(S) MET: --
+ + None
+
+ --------------------------------------
+
+ The MIT License (MIT)
+
+ Copyright (c) 2021 OpenFin
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ **/
+
 package com.missouristate.csc450.socer.service.impl;
 
 import com.missouristate.csc450.socer.DAO.FinalProjectRepository;
@@ -121,6 +174,8 @@ public class SocerServiceImpl implements SocerService {
 
             ArrayList<String> descriptionList = new ArrayList<>();
             for(int i = 0; i<listOfFunctionNames.size(); i++) {
+                // FR.2   SoCeRC++ shall generate descriptors for valid C++ functions.
+                // FR.3.2 SoCeRC++ shall generate a description for a function in the database.
                 CommentAndVariableExtractor commentAndVariableExtractor = new CommentAndVariableExtractor(listOfFunctionNames.get(i));
                 String description = "";
                 for (String string : commentAndVariableExtractor.getAllWordsArray()) {
@@ -326,7 +381,7 @@ public class SocerServiceImpl implements SocerService {
         Collections.sort(functionListAfterSearch);
         Collections.reverse(functionListAfterSearch);
 
-
+        // FR.4 SoCeRC++ shall return stored C++ functions in response to user queries.
         return functionListAfterSearch;
     }
 
